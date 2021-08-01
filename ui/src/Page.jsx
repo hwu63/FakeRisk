@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Navbar, Nav, NavItem, NavDropdown,
+  Navbar, Nav, NavDropdown,
   MenuItem, Glyphicon,
   Grid, Col,
 } from 'react-bootstrap';
@@ -13,24 +13,15 @@ import UserContext from './UserContext.js';
 import graphQLFetch from './graphQLFetch.js';
 import store from './store.js';
 import SignInNavItem from './SignInNavItem.jsx';
+import Sidebar from './Sidebar.jsx';
 
 function NavBar({ user, onUserChange }) {
   return (
     <Navbar>
       <Navbar.Header>
-        <Navbar.Brand>Issue Tracker</Navbar.Brand>
+        <Navbar.Brand>FakeRisk</Navbar.Brand>
       </Navbar.Header>
-      <Nav>
-        <LinkContainer exact to="/">
-          <NavItem>Home</NavItem>
-        </LinkContainer>
-        <LinkContainer to="/issues">
-          <NavItem>Issue List</NavItem>
-        </LinkContainer>
-        <LinkContainer to="/report">
-          <NavItem>Report</NavItem>
-        </LinkContainer>
-      </Nav>
+      <Sidebar />
       <Col sm={5}>
         <Navbar.Form>
           <Search />
@@ -60,7 +51,7 @@ function Footer() {
       <p className="text-center">
         Full source code available at this
         {' '}
-        <a href="https://github.com/tonymullen/ProMERNStackBook">
+        <a href="https://github.com/hwu63/FakeRisk">
           GitHub repository
         </a>
       </p>

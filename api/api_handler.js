@@ -16,7 +16,7 @@ const resolvers = {
   Query: {
     about: about.getMessage,
     user: auth.resolveUser,
-    issueList: issue.list,
+    StrategyList: issue.list,
     issue: issue.get,
     issueCounts: issue.counts,
   },

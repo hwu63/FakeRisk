@@ -123,17 +123,17 @@ IssueAdd.propTypes = {
   createIssue: PropTypes.func.isRequired
 };
 
-var IssueList =
+var StrategyList =
 /*#__PURE__*/
 function (_React$Component3) {
-  _inherits(IssueList, _React$Component3);
+  _inherits(StrategyList, _React$Component3);
 
-  function IssueList() {
+  function StrategyList() {
     var _this2;
 
-    _classCallCheck(this, IssueList);
+    _classCallCheck(this, StrategyList);
 
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(IssueList).call(this));
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(StrategyList).call(this));
     _this2.state = {
       issues: []
     };
@@ -141,7 +141,7 @@ function (_React$Component3) {
     return _this2;
   }
 
-  _createClass(IssueList, [{
+  _createClass(StrategyList, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       this.loadData();
@@ -157,7 +157,7 @@ function (_React$Component3) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                query = "query {\n            issueList {\n                id title status owner\n                created effort due\n            }\n        }";
+                query = "query {\n            StrategyList {\n                id title status owner\n                created effort due\n            }\n        }";
                 _context.next = 3;
                 return (0, _graphQLFetch.default)(query);
 
@@ -166,7 +166,7 @@ function (_React$Component3) {
 
                 if (data) {
                   this.setState({
-                    issues: data.issueList
+                    issues: data.StrategyList
                   });
                 }
 
@@ -234,8 +234,8 @@ function (_React$Component3) {
     }
   }]);
 
-  return IssueList;
+  return StrategyList;
 }(React.Component);
 
-var element = React.createElement(IssueList, null);
+var element = React.createElement(StrategyList, null);
 ReactDOM.render(element, document.getElementById('content'));

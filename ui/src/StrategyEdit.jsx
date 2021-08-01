@@ -14,7 +14,7 @@ import DateInput from './DateInput.jsx';
 import TextInput from './TextInput.jsx';
 import UserContext from './UserContext.js';
 
-class IssueEdit extends React.Component {
+class StrategyEdit extends React.Component {
   static async fetchData(match, search, showError) {
     const query = `query issue($id: Int!) {
       issue(id: $id) {
@@ -102,7 +102,7 @@ class IssueEdit extends React.Component {
 
   async loadData() {
     const { match, showError } = this.props;
-    const data = await IssueEdit.fetchData(match, null, showError);
+    const data = await StrategyEdit.fetchData(match, null, showError);
     this.setState({ issue: data ? data.issue : {}, invalidFields: {} });
   }
 
@@ -253,7 +253,7 @@ class IssueEdit extends React.Component {
                   >
                     Submit
                   </Button>
-                  <LinkContainer to="/issues">
+                  <LinkContainer to="strategies">
                     <Button bsStyle="link">Back</Button>
                   </LinkContainer>
                 </ButtonToolbar>
@@ -274,9 +274,9 @@ class IssueEdit extends React.Component {
   }
 }
 
-IssueEdit.contextType = UserContext;
+StrategyEdit.contextType = UserContext;
 
-const IssueEditWithToast = withToast(IssueEdit);
-IssueEditWithToast.fetchData = IssueEdit.fetchData;
+const StrategyEditWithToast = withToast(StrategyEdit);
+StrategyEditWithToast.fetchData = StrategyEdit.fetchData;
 
-export default IssueEditWithToast;
+export default StrategyEditWithToast;

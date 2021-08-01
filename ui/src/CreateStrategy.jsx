@@ -8,7 +8,7 @@ import store from './store.js';
 
 const statuses = ['New', 'Assigned', 'Fixed', 'Closed'];
 
-class IssueReport extends React.Component {
+class CreateStrategy extends React.Component {
   static async fetchData(match, search, showError) {
     const params = new URLSearchParams(search);
     const vars = {};
@@ -19,7 +19,7 @@ class IssueReport extends React.Component {
     const effortMax = parseInt(params.get('effortMax'), 10);
     if (!Number.isNaN(effortMax)) vars.effortMax = effortMax;
 
-    const query = `query issueList(
+    const query = `query StrategyList(
       $status: StatusType
       $effortMin: Int
       $effortMax: Int
@@ -58,7 +58,7 @@ class IssueReport extends React.Component {
 
   async loadData() {
     const { location: { search }, match, showError } = this.props;
-    const data = await IssueReport.fetchData(match, search, showError);
+    const data = await CreateStrategy.fetchData(match, search, showError);
     if (data) {
       this.setState({ stats: data.issueCounts });
     }
@@ -90,7 +90,7 @@ class IssueReport extends React.Component {
             <Panel.Title toggle>Filter</Panel.Title>
           </Panel.Heading>
           <Panel.Body collapsible>
-            <IssueFilter urlBase="/report" />
+            <IssueFilter urlBase="/create" />
           </Panel.Body>
         </Panel>
         <Table bordered condensed hover responsive>
@@ -109,7 +109,7 @@ class IssueReport extends React.Component {
   }
 }
 
-const IssueReportWithToast = withToast(IssueReport);
-IssueReportWithToast.fetchData = IssueReport.fetchData;
+const CreateStrategyWithToast = withToast(CreateStrategy);
+CreateStrategyWithToast.fetchData = CreateStrategy.fetchData;
 
-export default IssueReportWithToast;
+export default CreateStrategyWithToast;

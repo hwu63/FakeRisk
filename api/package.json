@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/hwu63/FakeRisk.git"
   },
-  "author": "",
+  "author": "Heather Novak, Huiyun Wu, Jingyi Xu",
   "license": "ISC",
   "dependencies": {
     "apollo-server-express": "^2.9.9",

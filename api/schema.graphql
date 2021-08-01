@@ -28,7 +28,7 @@ type IssueCounts {
     Closed: Int
 }
 
-type IssueListWithPages {
+type StrategyListWithPages {
     issues: [Issue!]!
     pages: Int
 }
@@ -67,13 +67,13 @@ input IssueUpdateInputs {
 type Query {
     about: String!
     user: User!
-    issueList(
+    StrategyList(
         status: StatusType
         effortMin: Int
         effortMax: Int
         search: String
         page: Int = 1
-    ): IssueListWithPages
+    ): StrategyListWithPages
     issue(id: Int!): Issue!
     issueCounts(
         status: StatusType

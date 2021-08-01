@@ -27,7 +27,7 @@ function PageLink({
   );
 }
 
-class IssueList extends React.Component {
+class StrategyList extends React.Component {
   static async fetchData(match, search, showError) {
     const params = new URLSearchParams(search);
     const vars = { hasSelection: false, selectedId: 0 };
@@ -49,7 +49,7 @@ class IssueList extends React.Component {
     if (Number.isNaN(page)) page = 1;
     vars.page = page;
 
-    const query = `query issueList(
+    const query = `query StrategyList(
       $status: StatusType
       $effortMin: Int
       $effortMax: Int
@@ -57,7 +57,7 @@ class IssueList extends React.Component {
       $selectedId: Int!
       $page: Int
     ) {
-      issueList(
+      StrategyList(
         status: $status
         effortMin: $effortMin
         effortMax: $effortMax
@@ -80,13 +80,13 @@ class IssueList extends React.Component {
 
   constructor() {
     super();
-    // const issues = store.initialData ? store.initialData.issueList : null;
+    // const issues = store.initialData ? store.initialData.StrategyList : null;
     // const selectedIssue = store.initialData
-    //   ? store.initialData.issueList.issues
+    //   ? store.initialData.StrategyList.issues
     //   : null;
-    const initialData = store.initialData || { issueList: {} };
+    const initialData = store.initialData || { StrategyList: {} };
     const {
-      issueList: { issues, pages }, issue: selectedIssue,
+      StrategyList: { issues, pages }, issue: selectedIssue,
     } = initialData;
 
     delete store.initialData;
@@ -117,37 +117,37 @@ class IssueList extends React.Component {
 
   async loadData() {
     const { location: { search }, match, showError } = this.props;
-    const data = await IssueList.fetchData(match, search, showError);
+    const data = await StrategyList.fetchData(match, search, showError);
     if (data) {
       this.setState({
-        issues: data.issueList.issues,
+        issues: data.StrategyList.issues,
         selectedIssue: data.issue,
-        pages: data.issueList.pages,
+        pages: data.StrategyList.pages,
       });
     }
   }
 
-  async closeIssue(index) {
-    const query = `mutation issueClose($id: Int!) {
-      issueUpdate(id: $id, changes: { status: Closed }) {
-        id title status owner
-        effort created due description
-      }
-    }`;
-    const { issues } = this.state;
-    const { showError } = this.props;
-    const data = await graphQLFetch(query, { id: issues[index].id },
-      showError);
-    if (data) {
-      this.setState((prevState) => {
-        const newList = [...prevState.issues];
-        newList[index] = data.issueUpdate;
-        return { issues: newList };
-      });
-    } else {
-      this.loadData();
-    }
-  }
+//   async closeIssue(index) {
+//     const query = `mutation issueClose($id: Int!) {
+//       issueUpdate(id: $id, changes: { status: Closed }) {
+//         id title status owner
+//         effort created due description
+//       }
+//     }`;
+//     const { issues } = this.state;
+//     const { showError } = this.props;
+//     const data = await graphQLFetch(query, { id: issues[index].id },
+//       showError);
+//     if (data) {
+//       this.setState((prevState) => {
+//         const newList = [...prevState.issues];
+//         newList[index] = data.issueUpdate;
+//         return { issues: newList };
+//       });
+//     } else {
+//       this.loadData();
+//     }
+//   }
 
   async deleteIssue(index) {
     const query = `mutation issueDelete($id: Int!) {
@@ -161,8 +161,8 @@ class IssueList extends React.Component {
     if (data && data.issueDelete) {
       this.setState((prevState) => {
         const newList = [...prevState.issues];
-        if (pathname === `/issues/${id}`) {
-          history.push({ pathname: '/issues', search });
+        if (pathname === `strategies/${id}`) {
+          history.push({ pathname: 'strategies', search });
         }
         newList.splice(index, 1);
         return { issues: newList };
@@ -224,7 +224,7 @@ class IssueList extends React.Component {
             <Panel.Title toggle>Filter</Panel.Title>
           </Panel.Heading>
           <Panel.Body collapsible>
-            <IssueFilter urlBase="/issues" />
+            <IssueFilter urlBase="strategies" />
           </Panel.Body>
         </Panel>
         <IssueTable
@@ -247,7 +247,7 @@ class IssueList extends React.Component {
   }
 }
 
-const IssueListWithToast = withToast(IssueList);
-IssueListWithToast.fetchData = IssueList.fetchData;
+const StrategyListWithToast = withToast(StrategyList);
+StrategyListWithToast.fetchData = StrategyList.fetchData;
 
-export default IssueListWithToast;
+export default StrategyListWithToast;
