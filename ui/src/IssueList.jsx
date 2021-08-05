@@ -178,8 +178,8 @@ class IssueList extends React.Component {
     if (data && data.issueDelete) {
       this.setState((prevState) => {
         const newList = [...prevState.issues];
-        if (pathname === `/issues/${id}`) {
-          history.push({ pathname: "/issues", search });
+        if (pathname === `/strategies/${id}`) {
+          history.push({ pathname: "/strategies", search });
         }
         newList.splice(index, 1);
         return { issues: newList };
@@ -245,7 +245,7 @@ class IssueList extends React.Component {
             <Panel.Title toggle>Filter</Panel.Title>
           </Panel.Heading>
           <Panel.Body collapsible>
-            <IssueFilter urlBase="/issues" />
+            <IssueFilter urlBase="/strategies" />
           </Panel.Body>
         </Panel>
         <hr />

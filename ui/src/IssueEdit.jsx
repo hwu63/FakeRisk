@@ -306,7 +306,7 @@ class IssueEdit extends React.Component {
                   >
                     Submit
                   </Button>
-                  <LinkContainer to="/issues">
+                  <LinkContainer to="/strategies">
                     <Button bsStyle="link">Back</Button>
                   </LinkContainer>
                 </ButtonToolbar>
