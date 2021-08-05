@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import graphQLFetch from './graphQLFetch.js';
 import withToast from './withToast.jsx';
 
-class Search extends React.Component {
+class SearchStock extends React.Component {
   constructor(props) {
     super(props);
     this.onChangeSlection = this.onChangeSelection.bind(this);
@@ -46,4 +46,4 @@ class Search extends React.Component {
   }
 }
 
-export default withRouter(withToast(Search));
+export default withRouter(withToast(SearchStock));

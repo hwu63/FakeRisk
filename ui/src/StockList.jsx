@@ -9,6 +9,7 @@ import IssueDetail from "./IssueDetail.jsx";
 import graphQLFetch from "./graphQLFetch.js";
 import withToast from "./withToast.jsx";
 import store from "./store.js";
+import SearchStock from "./SearchStock.jsx";
 
 const SECTION_SIZE = 5;
 
@@ -240,6 +241,8 @@ class StockList extends React.Component {
 
     return (
       <React.Fragment>
+		<SearchStock />
+		<hr />
         <Panel>
           <Panel.Heading>
             <Panel.Title toggle>Filter</Panel.Title>

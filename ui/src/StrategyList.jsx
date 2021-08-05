@@ -9,6 +9,7 @@ import IssueDetail from "./IssueDetail.jsx";
 import graphQLFetch from "./graphQLFetch.js";
 import withToast from "./withToast.jsx";
 import store from "./store.js";
+import SearchStrategy from "./SearchStrategy.jsx";
 
 const SECTION_SIZE = 5;
 
@@ -25,7 +26,7 @@ function PageLink({ params, page, activePage, children }) {
   );
 }
 
-class IssueList extends React.Component {
+class StrategyList extends React.Component {
   static async fetchData(match, search, showError) {
     const params = new URLSearchParams(search);
     const vars = { hasSelection: false, selectedId: 0 };
@@ -130,7 +131,7 @@ class IssueList extends React.Component {
       showError,
     } = this.props;
 
-    const data = await IssueList.fetchData(match, search, this.showError);
+    const data = await StrategyList.fetchData(match, search, this.showError);
 
     if (data) {
       this.setState({
@@ -240,6 +241,8 @@ class IssueList extends React.Component {
 
     return (
       <React.Fragment>
+		<SearchStrategy />
+		<hr />
         <Panel>
           <Panel.Heading>
             <Panel.Title toggle>Filter</Panel.Title>
@@ -270,7 +273,7 @@ class IssueList extends React.Component {
   }
 }
 
-const IssueListWithToast = withToast(IssueList);
-IssueListWithToast.fetchData = IssueList.fetchData;
+const IssueListWithToast = withToast(StrategyList);
+IssueListWithToast.fetchData = StrategyList.fetchData;
 
 export default IssueListWithToast;

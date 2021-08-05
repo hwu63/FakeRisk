@@ -1,14 +1,14 @@
-import IssueList from './IssueList.jsx';
+import StrategyList from './StrategyList.jsx';
 import StockList from './StockList.jsx';
 import IssueReport from './IssueReport.jsx';
-import IssueEdit from './IssueEdit.jsx';
+import StrategyEdit from './StrategyEdit.jsx';
 import About from './About.jsx';
 import NotFound from './NotFound.jsx';
 
 
 const routes = [
-	{ path: '/strategies/:id?', component: IssueList },
-	{ path: '/edit/:id', component: IssueEdit },
+	{ path: '/strategies/:id?', component: StrategyList },
+	{ path: '/edit/:id', component: StrategyEdit },
 	{ path: '/report', component: IssueReport },
 	{ path: '/about', component: About },
 	{ path: '/stocks/:id?', component: StockList },

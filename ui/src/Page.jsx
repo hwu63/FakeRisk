@@ -14,7 +14,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import Contents from "./Contents.jsx";
 import IssueAddNavItem from "./IssueAddNavItem.jsx";
 import SignInNavItem from "./SignInNavItem.jsx";
-import Search from "./Search.jsx";
+import Search from "./SearchStrategy.jsx";
 import UserContext from "./UserContext.js";
 import graphQLFetch from './graphQLFetch.js';
 import store from './store.js';
@@ -26,7 +26,7 @@ function NavBar({ user, onUserChange }) {
 				<Navbar.Brand>FakeRisk</Navbar.Brand>
 			</Navbar.Header>
 
-			<Nav>
+			{/* <Nav defaultActiveKey="/" className="flex-column">
 				<LinkContainer exact to="/">
 					<NavItem>Home</NavItem>
 				</LinkContainer>
@@ -36,13 +36,7 @@ function NavBar({ user, onUserChange }) {
 				<LinkContainer to="/stocks">
 					<NavItem>Stock List</NavItem>
 				</LinkContainer>
-			</Nav>
-
-			<Col sm={5}>
-				<Navbar.Form>
-					<Search />
-				</Navbar.Form>
-			</Col>
+			</Nav> */}
 
 			<Nav pullRight>
 				<IssueAddNavItem user={user} />

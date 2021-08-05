@@ -21,7 +21,7 @@ import store from "./store.js";
 import withToast from './withToast.jsx';
 import UserContext from './UserContext.js';
 
-class IssueEdit extends React.Component {
+class StrategyEdit extends React.Component {
   static async fetchData(match, search, showError) {
     const query = `query issue($id: Int!) {
 				issue(id: $id) {
@@ -119,7 +119,7 @@ class IssueEdit extends React.Component {
 
   async loadData() {
     const { match, showError } = this.props;
-    const data = await IssueEdit.fetchData(match, null, showError);
+    const data = await StrategyEdit.fetchData(match, null, showError);
     this.setState({ issue: data ? data.issue : {}, invalidFields: {} });
   }
 
@@ -332,8 +332,8 @@ class IssueEdit extends React.Component {
   }
 }
 
-IssueEdit.contextType = UserContext;
-const IssueEditWithToast = withToast(IssueEdit);
-IssueEditWithToast.fetchData = IssueEdit.fetchData;
+StrategyEdit.contextType = UserContext;
+const IssueEditWithToast = withToast(StrategyEdit);
+IssueEditWithToast.fetchData = StrategyEdit.fetchData;
 
 export default IssueEditWithToast;
