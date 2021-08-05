@@ -1,10 +1,16 @@
-import React from 'react';
-import URLSearchParams from 'url-search-params';
-import { withRouter } from 'react-router-dom';
+import React from "react";
+import URLSearchParams from "url-search-params";
+import { withRouter } from "react-router-dom";
 import {
-  ButtonToolbar, Button, FormGroup, FormControl, ControlLabel, InputGroup,
-  Row, Col,
-} from 'react-bootstrap';
+  ButtonToolbar,
+  Button,
+  FormGroup,
+  FormControl,
+  ControlLabel,
+  InputGroup,
+  Row,
+  Col,
+} from "react-bootstrap";
 /* eslint "react/prefer-stateless-function": "off" */
 
 class IssueFilter extends React.Component {
@@ -12,21 +18,26 @@ class IssueFilter extends React.Component {
     super();
     const params = new URLSearchParams(search);
     this.state = {
-      status: params.get('status') || '',
-      effortMin: params.get('effortMin') || '',
-      effortMax: params.get('effortMax') || '',
+      status: params.get("status") || "",
+      effortMin: params.get("effortMin") || "",
+      effortMax: params.get("effortMax") || "",
       changed: false,
     };
+
     this.onChangeStatus = this.onChangeStatus.bind(this);
-    this.applyFilter = this.applyFilter.bind(this);
-    this.showOriginalFilter = this.showOriginalFilter.bind(this);
     this.onChangeEffortMin = this.onChangeEffortMin.bind(this);
     this.onChangeEffortMax = this.onChangeEffortMax.bind(this);
+    this.applyFilter = this.applyFilter.bind(this);
+    this.showOriginalFilter = this.showOriginalFilter.bind(this);
   }
 
   componentDidUpdate(prevProps) {
-    const { location: { search: prevSearch } } = prevProps;
-    const { location: { search } } = this.props;
+    const {
+      location: { search: prevSearch },
+    } = prevProps;
+    const {
+      location: { search },
+    } = this.props;
     if (prevSearch !== search) {
       this.showOriginalFilter();
     }
@@ -49,14 +60,15 @@ class IssueFilter extends React.Component {
       this.setState({ effortMax: e.target.value, changed: true });
     }
   }
-
   showOriginalFilter() {
-    const { location: { search } } = this.props;
+    const {
+      location: { search },
+    } = this.props;
     const params = new URLSearchParams(search);
     this.setState({
-      status: params.get('status') || '',
-      effortMin: params.get('effortMin') || '',
-      effortMax: params.get('effortMax') || '',
+      status: params.get("status") || "",
+      effortMin: params.get("effortMin") || "",
+      effortMax: params.get("effortMax") || "",
       changed: false,
     });
   }
@@ -66,17 +78,17 @@ class IssueFilter extends React.Component {
     const { history, urlBase } = this.props;
 
     const params = new URLSearchParams();
-    if (status) params.set('status', status);
-    if (effortMin) params.set('effortMin', effortMin);
-    if (effortMax) params.set('effortMax', effortMax);
-
-    const search = params.toString() ? `?${params.toString()}` : '';
+    if (status) params.set("status", status);
+    if (effortMin) params.set("effortMin", effortMin);
+    if (effortMax) params.set("effortMax", effortMax);
+    const search = params.toString() ? `?${params.toString()}` : "";
     history.push({ pathname: urlBase, search });
   }
 
   render() {
     const { status, changed } = this.state;
     const { effortMin, effortMax } = this.state;
+
     return (
       <Row>
         <Col xs={6} sm={4} md={3} lg={2}>
@@ -89,6 +101,9 @@ class IssueFilter extends React.Component {
             >
               <option value="">(All)</option>
               <option value="New">New</option>
+              <option value="Assigned">Assigned</option>
+              <option value="Fixed">Fixed</option>
+              <option value="Closed">Closed</option>
             </FormControl>
           </FormGroup>
         </Col>
@@ -96,9 +111,15 @@ class IssueFilter extends React.Component {
           <FormGroup>
             <ControlLabel>Effort between:</ControlLabel>
             <InputGroup>
-              <FormControl value={effortMin} onChange={this.onChangeEffortMin} />
+              <FormControl
+                value={effortMin}
+                onChange={this.onChangeEffortMin}
+              />
               <InputGroup.Addon>-</InputGroup.Addon>
-              <FormControl value={effortMax} onChange={this.onChangeEffortMax} />
+              <FormControl
+                value={effortMax}
+                onChange={this.onChangeEffortMax}
+              />
             </InputGroup>
           </FormGroup>
         </Col>
@@ -106,7 +127,11 @@ class IssueFilter extends React.Component {
           <FormGroup>
             <ControlLabel>&nbsp;</ControlLabel>
             <ButtonToolbar>
-              <Button bsStyle="primary" type="button" onClick={this.applyFilter}>
+              <Button
+                bsStyle="primary"
+                type="button"
+                onClick={this.applyFilter}
+              >
                 Apply
               </Button>
               <Button

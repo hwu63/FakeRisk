@@ -1,31 +1,35 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
-import { LinkContainer } from 'react-router-bootstrap';
+import React from "react";
+import {  withRouter } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
 import {
-  Button, Glyphicon, Tooltip, OverlayTrigger, Table,
-} from 'react-bootstrap';
+  Button,
+  Glyphicon,
+  Tooltip,
+  OverlayTrigger,
+  Table,
+} from "react-bootstrap";
 
 import UserContext from './UserContext.js';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class IssueRowPlain extends React.Component {
-  render() {
-    const {
-      issue, location: { search }, closeIssue, deleteIssue, index,
-    } = this.props;
-    const user = this.context;
-    const disabled = !user.signedIn;
+	render() {
+	  const {
+		issue, location: { search }, closeIssue, deleteIssue, index,
+	  } = this.props;
+	  const user = this.context;
+	  const disabled = !user.signedIn;
 
-    const selectLocation = { pathname: `strategies/${issue.id}`, search };
-    const editToolTip = (
-      <Tooltip id="close-tooltip" placement="top">Edit Issue</Tooltip>
-    );
-    const closeTooltip = (
-      <Tooltip id="close-tooltip" placement="top">Close Issue</Tooltip>
-    );
-    const deleteTooltip = (
-      <Tooltip id="delete-tooltip" placement="top">Delete Issue</Tooltip>
-    );
+	  const selectLocation = { pathname: `/issues/${issue.id}`, search };
+	  const editToolTip = (
+		<Tooltip id="close-tooltip" placement="top">Edit Issue</Tooltip>
+	  );
+	  const closeTooltip = (
+		<Tooltip id="close-tooltip" placement="top">Close Issue</Tooltip>
+	  );
+	  const deleteTooltip = (
+		<Tooltip id="delete-tooltip" placement="top">Delete Issue</Tooltip>
+	  );
 
     function onClose(e) {
       e.preventDefault();
@@ -44,12 +48,13 @@ class IssueRowPlain extends React.Component {
         <td>{issue.owner}</td>
         <td>{issue.created.toDateString()}</td>
         <td>{issue.effort}</td>
-        <td>{issue.due ? issue.due.toDateString() : ''}</td>
+        <td>{issue.due ? issue.due.toDateString() : " "}</td>
         <td>{issue.title}</td>
+
         <td>
           <LinkContainer to={`/edit/${issue.id}`}>
             <OverlayTrigger delayShow={1000} overlay={editToolTip}>
-              <Button bsSize="xsmall">
+              <Button disabled={disabled} bsSize="xsmall">
                 <Glyphicon glyph="edit" />
               </Button>
             </OverlayTrigger>
@@ -59,7 +64,7 @@ class IssueRowPlain extends React.Component {
               <Glyphicon glyph="remove" />
             </Button>
           </OverlayTrigger>
-          {' '}
+		  {' '}
           <OverlayTrigger delayShow={1000} overlay={deleteTooltip}>
             <Button disabled={disabled} bsSize="xsmall" onClick={onDelete}>
               <Glyphicon glyph="trash" />
@@ -68,11 +73,8 @@ class IssueRowPlain extends React.Component {
         </td>
       </tr>
     );
-    return (
-      <LinkContainer to={selectLocation}>
-        {tableRow}
-      </LinkContainer>
-    );
+
+    return <LinkContainer to={selectLocation}>{tableRow}</LinkContainer>;
   }
 }
 
@@ -90,6 +92,7 @@ export default function IssueTable({ issues, closeIssue, deleteIssue }) {
       index={index}
     />
   ));
+
   return (
     <Table bordered condensed hover responsive>
       <thead>
@@ -104,9 +107,7 @@ export default function IssueTable({ issues, closeIssue, deleteIssue }) {
           <th>Action</th>
         </tr>
       </thead>
-      <tbody>
-        {issueRows}
-      </tbody>
+      <tbody>{issueRows}</tbody>
     </Table>
   );
 }

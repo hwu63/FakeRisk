@@ -1,21 +1,19 @@
-import React from 'react';
-import { Panel, Pagination, Button } from 'react-bootstrap';
-import URLSearchParams from 'url-search-params';
-import { LinkContainer } from 'react-router-bootstrap';
+import React from "react";
+import URLSearchParams from "url-search-params";
+import { Panel, Pagination, Button } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 
-import IssueFilter from './IssueFilter.jsx';
-import IssueTable from './IssueTable.jsx';
-import IssueDetail from './IssueDetail.jsx';
-import graphQLFetch from './graphQLFetch.js';
-import withToast from './withToast.jsx';
-import store from './store.js';
+import IssueFilter from "./IssueFilter.jsx";
+import IssueTable from "./IssueTable.jsx";
+import IssueDetail from "./IssueDetail.jsx";
+import graphQLFetch from "./graphQLFetch.js";
+import withToast from "./withToast.jsx";
+import store from "./store.js";
 
 const SECTION_SIZE = 5;
 
-function PageLink({
-  params, page, activePage, children,
-}) {
-  params.set('page', page);
+function PageLink({ params, page, activePage, children }) {
+  params.set("page", page);
   if (page === 0) return React.cloneElement(children, { disabled: true });
   return (
     <LinkContainer
@@ -27,52 +25,55 @@ function PageLink({
   );
 }
 
-class StrategyList extends React.Component {
+class IssueList extends React.Component {
   static async fetchData(match, search, showError) {
     const params = new URLSearchParams(search);
     const vars = { hasSelection: false, selectedId: 0 };
-    if (params.get('status')) vars.status = params.get('status');
+    if (params.get("status")) vars.status = params.get("status");
 
-    const effortMin = parseInt(params.get('effortMin'), 10);
+    const effortMin = parseInt(params.get("effortMin"), 10);
     if (!Number.isNaN(effortMin)) vars.effortMin = effortMin;
-    const effortMax = parseInt(params.get('effortMax'), 10);
+
+    const effortMax = parseInt(params.get("effortMax"), 10);
     if (!Number.isNaN(effortMax)) vars.effortMax = effortMax;
 
-    const { params: { id } } = match;
+    const {
+      params: { id },
+    } = match;
     const idInt = parseInt(id, 10);
     if (!Number.isNaN(idInt)) {
       vars.hasSelection = true;
       vars.selectedId = idInt;
     }
 
-    let page = parseInt(params.get('page'), 10);
+    let page = parseInt(params.get("page"), 10);
     if (Number.isNaN(page)) page = 1;
     vars.page = page;
 
-    const query = `query StrategyList(
-      $status: StatusType
-      $effortMin: Int
-      $effortMax: Int
-      $hasSelection: Boolean!
-      $selectedId: Int!
-      $page: Int
-    ) {
-      StrategyList(
-        status: $status
-        effortMin: $effortMin
-        effortMax: $effortMax
-        page: $page
-      ) {
-        issues {
-          id title status owner
-          created effort due
-        }
-        pages
-      }
-      issue(id: $selectedId) @include (if : $hasSelection) {
-        id description
-      }
-    }`;
+    const query = `query issueList(
+				$status: StatusType
+				$effortMin: Int
+				$effortMax: Int
+				$hasSelection: Boolean!
+ 				$selectedId: Int!
+				$page: Int
+			) {
+				issueList(
+				status: $status
+				effortMin: $effortMin
+				effortMax: $effortMax
+				page: $page
+				) {
+					issues{
+						id title status owner
+						created effort due
+					}
+					pages
+				}
+				issue(id: $selectedId) @include (if : $hasSelection) {
+					id description
+					}
+		}`;
 
     const data = await graphQLFetch(query, vars, showError);
     return data;
@@ -80,13 +81,11 @@ class StrategyList extends React.Component {
 
   constructor() {
     super();
-    // const issues = store.initialData ? store.initialData.StrategyList : null;
-    // const selectedIssue = store.initialData
-    //   ? store.initialData.StrategyList.issues
-    //   : null;
-    const initialData = store.initialData || { StrategyList: {} };
+
+    const initialData = store.initialData || { issueList: {} };
     const {
-      StrategyList: { issues, pages }, issue: selectedIssue,
+      issueList: { issues, pages },
+      issue: selectedIssue,
     } = initialData;
 
     delete store.initialData;
@@ -95,8 +94,28 @@ class StrategyList extends React.Component {
       selectedIssue,
       pages,
     };
+
     this.closeIssue = this.closeIssue.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    const {
+      location: { search: prevSearch },
+      match: {
+        params: { id: prevId },
+      },
+    } = prevProps;
+
+    const {
+      location: { search },
+      match: {
+        params: { id },
+      },
+    } = this.props;
+    if (prevSearch !== search || prevId !== id) {
+      this.loadData();
+    }
   }
 
   componentDidMount() {
@@ -104,69 +123,68 @@ class StrategyList extends React.Component {
     if (issues == null) this.loadData();
   }
 
-  componentDidUpdate(prevProps) {
+  async loadData() {
     const {
-      location: { search: prevSearch },
-      match: { params: { id: prevId } },
-    } = prevProps;
-    const { location: { search }, match: { params: { id } } } = this.props;
-    if (prevSearch !== search || prevId !== id) {
+      location: { search },
+      match,
+      showError,
+    } = this.props;
+
+    const data = await IssueList.fetchData(match, search, this.showError);
+
+    if (data) {
+      this.setState({
+        issues: data.issueList.issues,
+        selectedIssue: data.issue,
+        pages: data.issueList.pages,
+      });
+    }
+  }
+
+  async closeIssue(index) {
+    const query = `mutation issueClose($id: Int!) {
+						issueUpdate(id: $id, changes: { status: Closed }) {
+						id title status owner
+						effort created due description
+						}
+					}`;
+    const { issues } = this.state;
+    const { showError } = this.props;
+    const data = await graphQLFetch(query, { id: issues[index].id }, showError);
+    if (data) {
+      this.setState((prevState) => {
+        const newList = [...prevState.issues];
+        newList[index] = data.issueUpdate;
+        return { issues: newList };
+      });
+    } else {
       this.loadData();
     }
   }
 
-  async loadData() {
-    const { location: { search }, match, showError } = this.props;
-    const data = await StrategyList.fetchData(match, search, showError);
-    if (data) {
-      this.setState({
-        issues: data.StrategyList.issues,
-        selectedIssue: data.issue,
-        pages: data.StrategyList.pages,
-      });
-    }
-  }
-
-//   async closeIssue(index) {
-//     const query = `mutation issueClose($id: Int!) {
-//       issueUpdate(id: $id, changes: { status: Closed }) {
-//         id title status owner
-//         effort created due description
-//       }
-//     }`;
-//     const { issues } = this.state;
-//     const { showError } = this.props;
-//     const data = await graphQLFetch(query, { id: issues[index].id },
-//       showError);
-//     if (data) {
-//       this.setState((prevState) => {
-//         const newList = [...prevState.issues];
-//         newList[index] = data.issueUpdate;
-//         return { issues: newList };
-//       });
-//     } else {
-//       this.loadData();
-//     }
-//   }
-
   async deleteIssue(index) {
     const query = `mutation issueDelete($id: Int!) {
-      issueDelete(id: $id)
-    }`;
+					issueDelete(id: $id)
+					}`;
     const { issues } = this.state;
-    const { location: { pathname, search }, history } = this.props;
     const { showSuccess, showError } = this.props;
+    const {
+      location: { pathname, search },
+      history,
+    } = this.props;
     const { id } = issues[index];
     const data = await graphQLFetch(query, { id }, showError);
+
     if (data && data.issueDelete) {
       this.setState((prevState) => {
         const newList = [...prevState.issues];
-        if (pathname === `strategies/${id}`) {
-          history.push({ pathname: 'strategies', search });
+        if (pathname === `/issues/${id}`) {
+          history.push({ pathname: "/issues", search });
         }
         newList.splice(index, 1);
         return { issues: newList };
       });
+
       const undoMessage = (
         <span>
           {`Deleted issue ${id} successfully.`}
@@ -175,6 +193,7 @@ class StrategyList extends React.Component {
           </Button>
         </span>
       );
+
       showSuccess(undoMessage);
     } else {
       this.loadData();
@@ -183,8 +202,8 @@ class StrategyList extends React.Component {
 
   async restoreIssue(id) {
     const query = `mutation issueRestore($id: Int!) {
-      issueRestore(id: $id)
-    }`;
+					issueRestore(id: $id)
+				}`;
     const { showSuccess, showError } = this.props;
     const data = await graphQLFetch(query, { id }, showError);
     if (data) {
@@ -195,26 +214,28 @@ class StrategyList extends React.Component {
 
   render() {
     const { issues } = this.state;
-    if (issues == null) return null;
-    const { selectedIssue, pages } = this.state;
-    const { location: { search } } = this.props;
-    const params = new URLSearchParams(search);
-    let page = parseInt(params.get('page'), 10);
-    if (Number.isNaN(page)) page = 1;
 
+    if (issues == null) return null;
+
+    const { selectedIssue, pages } = this.state;
+    const {
+      location: { search },
+    } = this.props;
+    const params = new URLSearchParams(search);
+    let page = parseInt(params.get("page"), 10);
+    if (Number.isNaN(page)) page = 1;
     const startPage = Math.floor((page - 1) / SECTION_SIZE) * SECTION_SIZE + 1;
     const endPage = startPage + SECTION_SIZE - 1;
     const prevSection = startPage === 1 ? 0 : startPage - SECTION_SIZE;
     const nextSection = endPage >= pages ? 0 : startPage + SECTION_SIZE;
-
     const items = [];
     for (let i = startPage; i <= Math.min(endPage, pages); i += 1) {
-      params.set('page', i);
-      items.push((
+      params.set("page", i);
+      items.push(
         <PageLink key={i} params={params} activePage={page} page={i}>
           <Pagination.Item>{i}</Pagination.Item>
         </PageLink>
-      ));
+      );
     }
 
     return (
@@ -224,22 +245,24 @@ class StrategyList extends React.Component {
             <Panel.Title toggle>Filter</Panel.Title>
           </Panel.Heading>
           <Panel.Body collapsible>
-            <IssueFilter urlBase="strategies" />
+            <IssueFilter urlBase="/issues" />
           </Panel.Body>
         </Panel>
+        <hr />
         <IssueTable
           issues={issues}
           closeIssue={this.closeIssue}
           deleteIssue={this.deleteIssue}
         />
+
         <IssueDetail issue={selectedIssue} />
         <Pagination>
           <PageLink params={params} page={prevSection}>
-            <Pagination.Item>{'<'}</Pagination.Item>
+            <Pagination.Item>{"<"}</Pagination.Item>
           </PageLink>
           {items}
           <PageLink params={params} page={nextSection}>
-            <Pagination.Item>{'>'}</Pagination.Item>
+            <Pagination.Item>{">"}</Pagination.Item>
           </PageLink>
         </Pagination>
       </React.Fragment>
@@ -247,7 +270,7 @@ class StrategyList extends React.Component {
   }
 }
 
-const StrategyListWithToast = withToast(StrategyList);
-StrategyListWithToast.fetchData = StrategyList.fetchData;
+const IssueListWithToast = withToast(IssueList);
+IssueListWithToast.fetchData = IssueList.fetchData;
 
-export default StrategyListWithToast;
+export default IssueListWithToast;

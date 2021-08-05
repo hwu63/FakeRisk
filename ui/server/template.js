@@ -1,35 +1,38 @@
 import serialize from 'serialize-javascript';
 
 export default function template(body, initialData, userData) {
-  return `<!DOCTYPE HTML>
-<html>
 
-<head>
-  <meta charset="utf-8">
-  <title>Pro MERN Stack</title>
-  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	return `<!DOCTYPE html>
+	<html>
 
-  <script src="https://apis.google.com/js/api:client.js"></script>
+	<head>
+		<meta charset="utf-8" />
+		<title>index</title>
+		<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" >
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    table.table-hover tr {cursor: pointer;}
-    .panel-title a {display: block; width: 100%; cursor: pointer;}
-  </style>
-</head>
+		<script src="https://apis.google.com/js/api:client.js"></script>
 
-<body>
-<!-- Page generated from template. -->
-<div id="content">${body}</div>
+		<style>
+			table.table-hover tr {cursor: pointer;}
 
-<script>
-  window.__INITIAL_DATA__ = ${serialize(initialData)}
-  window.__USER_DATA__ = ${serialize(userData)}
-</script>
-<script src="/env.js"></script>
-<script src="/vendor.bundle.js"></script>
-<script src="/app.bundle.js"></script>
-</body>
-</html>
-`;
+			.panel-title a {display: block; width: 100%; cursor: pointer;}
+		</style>
+	</head>
+
+	<body>
+	<!-- Page generated from template. -->
+		<div id="content">${body}</div>
+		<script>
+			window.__INITIAL_DATA__ = ${serialize(initialData)}
+			window.__USER_DATA__ = ${serialize(userData)}
+		</script>
+	</body>
+
+	<script src="/env.js"></script>
+	<script src="/vendor.bundle.js"></script>
+	<script src="/app.bundle.js"></script>
+
+	</html>
+   `;
 }

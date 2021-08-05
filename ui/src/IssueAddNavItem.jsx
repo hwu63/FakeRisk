@@ -1,14 +1,24 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
+import React from "react";
+import { withRouter } from "react-router-dom";
 import {
-  NavItem, Glyphicon, Modal, Form, FormGroup, FormControl, ControlLabel,
-  Button, ButtonToolbar, Tooltip, OverlayTrigger,
-} from 'react-bootstrap';
-
-import graphQLFetch from './graphQLFetch.js';
+  NavItem,
+  Glyphicon,
+  Modal,
+  Form,
+  FormGroup,
+  FormControl,
+  ControlLabel,
+  Button,
+  ButtonToolbar,
+  Tooltip,
+  OverlayTrigger,
+} from "react-bootstrap";
+import graphQLFetch from "./graphQLFetch.js";
 import withToast from './withToast.jsx';
 
+
 class IssueAddNavItem extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -27,7 +37,6 @@ class IssueAddNavItem extends React.Component {
     this.setState({ showing: false });
   }
 
-
   async handleSubmit(e) {
     e.preventDefault();
     this.hideModal();
@@ -38,24 +47,24 @@ class IssueAddNavItem extends React.Component {
       due: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 10),
     };
     const query = `mutation issueAdd($issue: IssueInputs!) {
-      issueAdd(issue: $issue) {
-        id
-      }
-    }`;
+ 				issueAdd(issue: $issue) {
+ 					id
+ 				}
+ 			}`;
 
-    const { showError } = this.props;
+	const { showError } = this.props;
     const data = await graphQLFetch(query, { issue }, showError);
     if (data) {
       const { history } = this.props;
       history.push(`/edit/${data.issueAdd.id}`);
     }
   }
-
   render() {
     const { showing } = this.state;
-    const { user: { signedIn } } = this.props;
+	const { user: { signedIn } } = this.props;
     return (
       <React.Fragment>
+
         <NavItem disabled={!signedIn} onClick={this.showModal}>
           <OverlayTrigger
             placement="left"
@@ -65,10 +74,12 @@ class IssueAddNavItem extends React.Component {
             <Glyphicon glyph="plus" />
           </OverlayTrigger>
         </NavItem>
+
         <Modal keyboard show={showing} onHide={this.hideModal}>
           <Modal.Header closeButton>
             <Modal.Title>Create Issue</Modal.Title>
           </Modal.Header>
+
           <Modal.Body>
             <Form name="issueAdd">
               <FormGroup>
@@ -81,6 +92,7 @@ class IssueAddNavItem extends React.Component {
               </FormGroup>
             </Form>
           </Modal.Body>
+
           <Modal.Footer>
             <ButtonToolbar>
               <Button
@@ -90,10 +102,13 @@ class IssueAddNavItem extends React.Component {
               >
                 Submit
               </Button>
-              <Button bsStyle="link" onClick={this.hideModal}>Cancel</Button>
+              <Button bsStyle="link" onClick={this.hideModal}>
+                Cancel
+              </Button>
             </ButtonToolbar>
           </Modal.Footer>
         </Modal>
+
       </React.Fragment>
     );
   }

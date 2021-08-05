@@ -1,18 +1,16 @@
-import React from 'react';
-
+import React from "react";
 function displayFormat(date) {
-  return (date != null) ? date.toDateString() : '';
+  return date != null ? date.toDateString() : "";
 }
-
 function editFormat(date) {
-  return (date != null) ? date.toISOString().substr(0, 10) : '';
+  return date != null ? date.toISOString().substr(0, 10) : "";
 }
-
 function unformat(str) {
-  const val = new Date(str);
-  return Number.isNaN(val.getTime()) ? null : val;
+  const isDate = str.match(
+    /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/
+  );
+  return isDate ? new Date(str) : null;
 }
-
 export default class DateInput extends React.Component {
   constructor(props) {
     super(props);
@@ -25,40 +23,34 @@ export default class DateInput extends React.Component {
     this.onBlur = this.onBlur.bind(this);
     this.onChange = this.onChange.bind(this);
   }
-
   onFocus() {
     this.setState({ focused: true });
   }
-
   onBlur(e) {
     const { value, valid: oldValid } = this.state;
     const { onValidityChange, onChange } = this.props;
     const dateValue = unformat(value);
-    const valid = value === '' || dateValue != null;
+    const valid = value === "" || dateValue != null;
     if (valid !== oldValid && onValidityChange) {
       onValidityChange(e, valid);
     }
     this.setState({ focused: false, valid });
     if (valid) onChange(e, dateValue);
   }
-
   onChange(e) {
     if (e.target.value.match(/^[\d-]*$/)) {
       this.setState({ value: e.target.value });
     }
   }
-
   render() {
     const { valid, focused, value } = this.state;
     const { value: origValue, onValidityChange, ...props } = this.props;
-    const displayValue = (focused || !valid) ? value
-      : displayFormat(origValue);
+    const displayValue = focused || !valid ? value : displayFormat(origValue);
     return (
       <input
-        type="text"
         {...props}
         value={displayValue}
-        placeholder={focused ? 'yyyy-mm-dd' : null}
+        placeholder={focused ? "yyyy-mm-dd" : null}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
         onChange={this.onChange}

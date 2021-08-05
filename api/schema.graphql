@@ -1,4 +1,3 @@
-
 scalar GraphQLDate
 
 enum StatusType {
@@ -28,7 +27,7 @@ type IssueCounts {
     Closed: Int
 }
 
-type StrategyListWithPages {
+type IssueListWithPages {
     issues: [Issue!]!
     pages: Int
 }
@@ -39,6 +38,7 @@ type User {
     names: String
     email: String
 }
+
 
 "Toned down Issue, used as ipnuts, without server generated values"
 input IssueInputs {
@@ -63,17 +63,16 @@ input IssueUpdateInputs {
 }
 
 ### Top level declarations
-
 type Query {
     about: String!
-    user: User!
-    StrategyList(
+	user: User!
+    issueList(
         status: StatusType
         effortMin: Int
         effortMax: Int
         search: String
         page: Int = 1
-    ): StrategyListWithPages
+    ): IssueListWithPages
     issue(id: Int!): Issue!
     issueCounts(
         status: StatusType
