@@ -14,29 +14,17 @@ import { LinkContainer } from "react-router-bootstrap";
 import Contents from "./Contents.jsx";
 import IssueAddNavItem from "./IssueAddNavItem.jsx";
 import SignInNavItem from "./SignInNavItem.jsx";
-import Search from "./SearchStrategy.jsx";
 import UserContext from "./UserContext.js";
 import graphQLFetch from './graphQLFetch.js';
 import store from './store.js';
 
 function NavBar({ user, onUserChange }) {
 	return (
+		<React.Fragment>
 		<Navbar>
 			<Navbar.Header>
 				<Navbar.Brand>FakeRisk</Navbar.Brand>
 			</Navbar.Header>
-
-			{/* <Nav defaultActiveKey="/" className="flex-column">
-				<LinkContainer exact to="/">
-					<NavItem>Home</NavItem>
-				</LinkContainer>
-				<LinkContainer to="/strategies">
-					<NavItem>Strategy List</NavItem>
-				</LinkContainer>
-				<LinkContainer to="/stocks">
-					<NavItem>Stock List</NavItem>
-				</LinkContainer>
-			</Nav> */}
 
 			<Nav pullRight>
 				<IssueAddNavItem user={user} />
@@ -52,6 +40,17 @@ function NavBar({ user, onUserChange }) {
 				</NavDropdown>
 			</Nav>
 		</Navbar>
+		{/* <Col xs={ 12 } md={ 3 } lg={ 2 } > */}
+			<Nav className="flex-column" >
+					<LinkContainer to="/strategies">
+						<NavItem>Strategy List</NavItem>
+					</LinkContainer>
+					<LinkContainer to="/stocks">
+						<NavItem>Stock List</NavItem>
+					</LinkContainer>
+				</Nav>
+		{/* </Col> */}
+		</React.Fragment>
 	);
 }
 
